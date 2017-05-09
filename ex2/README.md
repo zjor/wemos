@@ -14,4 +14,6 @@ This sketch does the following:
 ## Platform IO notes ##
 
 `platformio init -b d1_mini`
-`platformio lib install git@github.com:esp8266/Arduino.git` 
+`platformio lib install git@github.com:esp8266/Arduino.git`
+`platformio run -t upload`
+`pio device monitor --port /dev/cu.wchusbserialfa130 --baud 115200`
