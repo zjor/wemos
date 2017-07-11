@@ -20,6 +20,7 @@ def ensure_wifi(ssid, password):
 def install_deps():
 	if ensure_wifi(wifi_ssid, wifi_password):
 		upip.install("micropython-pkg_resources")
+		upip.install("micropython-logging")
 		upip.install("picoweb")		
 	else:
 		print("Not connected")

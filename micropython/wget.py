@@ -1,8 +1,16 @@
+import sys
+import ure
 import ussl
 import usocket
 
 debug = False
 warn_ussl = True
+
+def fatal(msg, exc=None):
+    print("Error:", msg)
+    if exc and debug:
+        raise exc
+    sys.exit(1)
 
 def url_open(url):
     global warn_ussl
@@ -11,8 +19,16 @@ def url_open(url):
         print(url)
 
     proto, _, host, urlpath = url.split('/', 3)
+
+    port = 443 if url.find("https") != -1 else 80
+
+    colon_pos = host.find(":")
+    if colon_pos != -1:
+        port = int(host[colon_pos + 1:])
+        host = host[:colon_pos]
+
     try:
-        ai = usocket.getaddrinfo(host, 443)
+        ai = usocket.getaddrinfo(host, port)
     except OSError as e:
         fatal("Unable to resolve %s (no Internet?)" % host, e)
     addr = ai[0][4]
@@ -22,7 +38,7 @@ def url_open(url):
         s.connect(addr)
 
         if proto == "https:":
-            s = ussl.wrap_socket(s, server_hostname=host)
+            s = ussl.wrap_socket(s)
             if warn_ussl:
                 print("Warning: %s SSL certificate is not validated" % host)
                 warn_ussl = False
