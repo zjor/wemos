@@ -2,8 +2,8 @@ import upip
 import time
 import network
 
-wifi_ssid = "Grgic1"
-wifi_password = "brankagrgic"
+wifi_ssid = "UPC92A2B1A"
+wifi_password = "X6ved8fseteu"
 
 def ensure_wifi(ssid, password):
 	
@@ -19,7 +19,12 @@ def ensure_wifi(ssid, password):
 
 def install_deps():
 	if ensure_wifi(wifi_ssid, wifi_password):
+		print("Installing packages")
 		upip.install("micropython-pkg_resources")
+		upip.install("micropython-logging")
 		upip.install("picoweb")		
 	else:
 		print("Not connected")
+
+if __name__ == "__main__":
+	install_deps()		
