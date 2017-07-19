@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "fw/src/mgos.h"
 #include "mongoose/mongoose.h"
-#include "mongoose/src/dns.h"
 
 #include "common/platform.h"
 #include "fw/src/mgos_app.h"
