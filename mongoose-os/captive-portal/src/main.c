@@ -8,10 +8,10 @@
 #include "fw/src/mgos_mongoose.h"
 #include "fw/src/mgos_sys_config.h"
 
-static in_addr_t s_our_ip_addr;
+static uint32_t s_our_ip_addr;
 static const char *s_listening_addr = "udp://:53";
 
-static void ev_handler(struct mg_connection *nc, int ev, void *ev_data) {
+static void ev_handler(struct mg_connection *nc, int ev, void *ev_data, void *user_data) {
     struct mg_dns_message *msg;
     struct mg_dns_resource_record *rr;
     struct mg_dns_reply reply;
@@ -48,6 +48,7 @@ static void ev_handler(struct mg_connection *nc, int ev, void *ev_data) {
             break;
         }
     }
+    (void) user_data;
 }
 
 enum mgos_app_init_result mgos_app_init(void) {

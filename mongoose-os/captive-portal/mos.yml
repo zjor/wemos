@@ -26,6 +26,10 @@ config_schema:
 #  - ["my_app.string_value", "s", "", {title: "Some string value"}]
 #  - ["my_app.int_value", "i", 123, {title: "Some integer value"}]
 
+cdefs:
+  MG_ENABLE_DNS: 1
+  MG_ENABLE_DNS_SERVER: 1
+
 # List of libraries used by this app, in order of initialisation
 libs:
   - origin: https://github.com/mongoose-os-libs/http-server
