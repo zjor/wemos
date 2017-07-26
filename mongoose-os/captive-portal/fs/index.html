@@ -1,5 +1,56 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<style>
+
+html, body {
+	height: 100%;
+}
+
+html, body, div {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	width: 100%;
+	font-family: sans-serif;
+}
+
+div {
+	width: 100%;
+	padding: 16px;
+}
+
+#header {
+	height: 72px;
+	line-height: 72px;
+	font-size: 2em;
+	background-color: lightgreen;
+}
+
+#content {
+	padding-bottom: 72px;
+	position: relative;
+	height: 100%;
+}
+
+#footer {    
+	position: absolute;    
+	bottom: 0;    
+	height: 72px;
+	line-height: 72px;
+	text-align: right;
+	background: #6cf; 
+}
+	</style>
+
+</head>
 <body>
-  <h1>Welcome to the empty project</h1>
+  <div id="header">IoT</div>
+  <div id="content">Welcome to ESP8266<br/>Wemos D1 mini</div>
+  <div id="footer">Powered by Mongoose OS</div> 
 </body>
 </html>

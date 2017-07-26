@@ -2,12 +2,6 @@
 #include "fw/src/mgos.h"
 #include "mongoose/mongoose.h"
 
-#include "common/platform.h"
-#include "fw/src/mgos_app.h"
-#include "fw/src/mgos_gpio.h"
-#include "fw/src/mgos_mongoose.h"
-#include "fw/src/mgos_sys_config.h"
-
 static uint32_t s_our_ip_addr;
 static const char *s_listening_addr = "udp://:53";
 
@@ -30,18 +24,9 @@ static void ev_handler(struct mg_connection *nc, int ev, void *ev_data, void *us
                 mg_dns_uncompress_name(msg, &rr->name, rname, sizeof(rname) - 1);
                 fprintf(stdout, "Q type %d name %s\n", rr->rtype, rname);
                 if (rr->rtype == MG_DNS_A_RECORD) {
-                    mg_dns_reply_record(&reply, rr, NULL, rr->rtype, 10, &s_our_ip_addr,
-                                        4);
+                    mg_dns_reply_record(&reply, rr, NULL, rr->rtype, 10, &s_our_ip_addr, 4);
                 }
             }
-
-            /*
-             * We don't set the error flag even if there were no answers
-             * matching the MG_DNS_A_RECORD query type.
-             * This indicates that we have (synthetic) answers for MG_DNS_A_RECORD.
-             * See http://goo.gl/QWvufr for a distinction between NXDOMAIN and NODATA.
-             */
-
             mg_dns_send_reply(nc, &reply);
             nc->flags |= MG_F_SEND_AND_CLOSE;
             mbuf_free(&reply_buf);

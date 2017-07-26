@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="style.css" rel="stylesheet"></link>
+	<script src="jquery-3.2.1.min.js"></script>
+</head>
+<body>
+	<div class="content">
+		<div class="header">
+			<span>Settings</span>
+		</div>
+
+		<div class="section-header">
+			<span>Access point</span>
+		</div>	
+		<div class="progress" id="ap-progress">Loading...</div>
+		<table id="ap-conf">
+		</table>
+	</div>
+<script>
+
+jQuery.extend({
+    postJSON: function(url, data, callback) {
+      return jQuery.ajax({
+        type: "POST",
+        url: url,
+        data: JSON.stringify(data),
+        success: callback,
+        dataType: "json",
+        contentType: "application/json",
+        processData: false
+      });
+    }
+});
+
+function requestWifiStatus() {
+	// var url = 'wifi.conf.json'; 
+	var url = 'http://192.168.4.1/rpc/Config.Get';
+	$.postJSON(url, {key: 'wifi'}, function(data) {
+		$('#ap-progress').hide();
+		var apConfTable = $('#ap-conf');
+		$('#ap-conf').empty();
+		$.each(data.ap, function(k, v) {
+			apConfTable.append('<tr><td>' + k + '</td><td>' + v + '</td></tr>');
+		});	
+	});
+};
+
+ $(function() {
+ 	requestWifiStatus();
+ });
+	
+</script>
+</body>
+</html>
