@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 	<link href="style.css" rel="stylesheet"></link>
 	<script src="jquery-3.2.1.min.js"></script>
 </head>
@@ -11,11 +13,35 @@
 		</div>
 
 		<div class="section-header">
-			<span>Access point</span>
+			<span>Wifi status</span>
 		</div>	
-		<div class="progress" id="ap-progress">Loading...</div>
-		<table id="ap-conf">
+		<div class="progress" id="wifi-progress">Loading...</div>
+		<table id="wifi-conf">
 		</table>
+
+		<div class="section-header">
+			<span>Connect to WiFi network</span>
+		</div>
+
+		<div class="field-input">
+			<label>SSID</label>
+			<input type="text" name="ssid" id="sta-ssid">
+		</div>
+
+		<div class="field-input">
+			<label>Username (for EAP)</label>
+			<input type="text" name="user" id="sta-user">
+		</div>
+
+		<div class="field-input">
+			<label>Password</label>
+			<input type="text" name="password" id="sta-pass">
+		</div>
+
+		<div>
+			<a href="#" id="sta-connect">Connect</a>
+		</div>
+
 	</div>
 <script>
 
@@ -33,21 +59,68 @@ jQuery.extend({
     }
 });
 
+var baseURL = 'http://192.168.4.1/';
+// var baseURL = 'http://localhost:8000/';
+
+function invokeRpc(method, data, callback) {
+	var url = baseURL + 'rpc/' + method;
+	$.postJSON(url, data, callback);
+};
+
 function requestWifiStatus() {
-	// var url = 'wifi.conf.json'; 
-	var url = 'http://192.168.4.1/rpc/Config.Get';
-	$.postJSON(url, {key: 'wifi'}, function(data) {
-		$('#ap-progress').hide();
-		var apConfTable = $('#ap-conf');
-		$('#ap-conf').empty();
-		$.each(data.ap, function(k, v) {
-			apConfTable.append('<tr><td>' + k + '</td><td>' + v + '</td></tr>');
-		});	
+	invokeRpc('Sys.GetInfo', {key: 'wifi'}, function(data) {
+		renderInterfaceConfig('wifi', data.wifi);
 	});
 };
 
+function connectToWifi(ssid, user, pass) {
+	var data = {
+		wifi: {
+			sta: {
+				enable: true,
+				ssid: ssid,
+				user: user,
+				pass: pass
+			}
+		}
+	};
+	invokeRpc('Config.Set', {config: data}, function(data) {
+		console.log('Config.Set:', data);
+	});
+
+	invokeRpc('Config.Save', {reboot: true}, function(data) {
+		console.log('Config.Save: rebooting');
+	});
+}
+
+function renderInterfaceConfig(prefix, data) {
+	$('#' + prefix + '-progress').hide();
+	var tableId = '#' + prefix + '-conf';
+	var table = $(tableId);
+	$(tableId).empty();
+	$.each(data, function(k, v) {
+		table.append('<tr><td>' + k + '</td><td>' + v + '</td></tr>');
+	});	
+};
+
+function requestWifiStatusLocal() {
+	var url = 'wifi.conf.json'; 
+	$.get(url, {key: 'wifi'}, function(data) {
+		renderInterfaceConfig('wifi', data.wifi);
+	});
+};
+
+
  $(function() {
  	requestWifiStatus();
+ 	// requestWifiStatusLocal();
+ 	$('#sta-connect').click(function(e) {
+ 		e.preventDefault();
+ 		var ssid = $('#sta-ssid').val();
+ 		var user = $('#sta-user').val();
+ 		var pass = $('#sta-pass').val();
+ 		connectToWifi(ssid, user, pass);
+ 	});
  });
 	
 </script>

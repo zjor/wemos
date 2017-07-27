@@ -4,10 +4,24 @@ html, body, div, span {
 	font-family: sans-serif;
 }
 
-.content {
-	width: 480px;
-	margin: 0 auto;
+@media only screen and (min-width: 800px) {
+
+	.content {
+		width: 480px;
+		margin: 0 auto;
+	}
+
 }
+
+@media only screen and (max-width: 800px) {
+
+	.content {
+		width: 100%;
+		margin: 0 auto;
+	}
+	
+}
+
 
 .header {
 	height: 56px;
@@ -39,4 +53,18 @@ html, body, div, span {
 
 table {
 	width: 100%;
+}
+
+.field-input {
+	margin: 8px;
+	width: 100%;
+}
+
+.field-input label {
+	display: block;
+}
+
+.field-input input {
+	font-size: 1.2em;
+	width: 80%;
 }
